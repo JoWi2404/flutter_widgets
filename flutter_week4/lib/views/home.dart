@@ -2,12 +2,20 @@ part of 'pages.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+  static const String routename = '/';
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  bool like = false;
+  void liked() {
+    setState(() {
+      like = !like;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     IconData button = Icons.favorite_border;
@@ -28,13 +36,36 @@ class _HomePageState extends State<HomePage> {
           children: [
             Flexible(
                 flex: 2,
-                child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Image.asset(
-                      "assets/images/Capella.jpg",
-                      fit: BoxFit.fill,
-                    ))),
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Image(
+                      image: AssetImage("assets/images/Capella.jpg"),
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                          top: 16,
+                          right: 16,
+                        ),
+                        child: Material(
+                          elevation: 3,
+                          borderRadius: BorderRadius.circular(20),
+                          child: CircleAvatar(
+                              backgroundColor: Colors.white.withOpacity(0.6),
+                              child: IconButton(
+                                onPressed: () {
+                                  liked();
+                                },
+                                icon: like
+                                    ? Icon(Icons.favorite_rounded)
+                                    : Icon(Icons.favorite_border_rounded),
+                                color: Colors.red,
+                              )),
+                        ))
+                  ],
+                )),
             Flexible(
                 flex: 1,
                 child: Row(
@@ -123,23 +154,13 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 100),
-        child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              button = button == Icons.favorite
-                  ? Icons.favorite_border
-                  : Icons.favorite;
-            });
-          },
-          tooltip: 'Favorite',
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.red,
-          child: Icon(button),
-        ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, Bookpage.routeName);
+        },
+        label: Text('Start Booking Now!'),
+        icon: Icon(Icons.book_rounded),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 }
